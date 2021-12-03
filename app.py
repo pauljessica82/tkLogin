@@ -60,8 +60,8 @@ class main():
         self.button_frame = Frame(self.master, padx=10, pady=10)
         Button(self.button_frame, text="Clear Screen", padx=5, pady=5, command=self.clear_msg).grid(row=0, column=0)
         Button(self.button_frame, text="Save Text", padx=5, pady=5, command=self.save_msg).grid(row=0, column=2)
-        Button(self.button_frame, text="Show My Messages", padx=5, pady=5, command=self.show_all_messages()).grid(row=0,
-                                                                                                                  column=4)
+        Button(self.button_frame, text="Show My Messages", padx=5, pady=5,
+               command=self.show_all_messages).grid(row=0, column=4)
         Button(self.button_frame, text="Logout", padx=5, pady=5, command=self.log).grid(row=0, column=6)
 
     def clear_msg(self):
@@ -89,8 +89,8 @@ class main():
         elif results:
             self.logf.pack_forget()
             # have a message box show
-            self.head["text"] = self.username.get() + '\n Logged In'
-            self.head["pady"] = 50
+            self.head["text"] = '\n Welcome, ' + self.username.get()
+            self.head["pady"] = 20
             self.my_text.pack(pady=20)
             self.button_frame.pack()
         else:
@@ -106,6 +106,8 @@ class main():
             print_records += str(record[0]) + "\n"
         self.sql_label = Label(root, text=print_records)
         self.sql_label.pack(pady=40)
+
+        db.commit()
 
     def new_user(self):
         with sqlite3.connect('userdata.db') as db:
@@ -145,5 +147,5 @@ class main():
 
 root = Tk()
 main(root)
-root.geometry("500x450")
+root.geometry("500x500")
 root.mainloop()
