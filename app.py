@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter import messagebox as mb
 import sqlite3
 
-
 with sqlite3.connect('userdata.db') as db:
     cur = db.cursor()
 
@@ -15,7 +14,6 @@ sql_create_msg_table = ("""CREATE TABLE IF NOT EXISTS messages (
                username TEXT NOT NULL,
                message TEXT );
 """)
-
 
 cur.execute(sql_create_msg_table)
 cur.execute(sql_create_user_table)
@@ -58,6 +56,14 @@ class main():
         Button(self.crf, text='Go to Login', bd=3, font=('', 15), padx=5, pady=5, command=self.log).grid(row=2,
                                                                                                          column=1)
 
+        self.my_text = Text(self.master, width=40, height=10, font=('Times', 14))
+        self.button_frame = Frame(self.master, padx=10, pady=10)
+        Button(self.button_frame, text="Clear Screen", padx=5, pady=5, command=self.clear_msg).grid(row=0, column=0)
+        Button(self.button_frame, text="Save Text", padx=5, pady=5, command=self.save_msg).grid(row=0, column=2)
+        Button(self.button_frame, text="Show My Messages", padx=5, pady=5, command=self.show_all_messages()).grid(row=0,
+                                                                                                                  column=4)
+        Button(self.button_frame, text="Logout", padx=5, pady=5, command=self.log).grid(row=0, column=6)
+
     def clear_msg(self):
         self.my_text.delete(1.0, END)
 
@@ -85,27 +91,10 @@ class main():
             # have a message box show
             self.head["text"] = self.username.get() + '\n Logged In'
             self.head["pady"] = 50
-            self.create_message()
+            self.my_text.pack(pady=20)
+            self.button_frame.pack()
         else:
             mb.showerror("Oops!!", "Invalid Credentials!")
-
-    def create_message(self):
-        self.my_text = Text(root, width=40, height=10, font=('Times', 14))
-        self.my_text.pack(pady=20)
-        self.button_frame = Frame(root)
-        self.button_frame.pack()
-
-        self.clear_button = Button(self.button_frame, text="Clear Screen", padx=5, pady=5, command=self.clear_msg)
-        self.clear_button.grid(row=0, column=0)
-
-        self.save_button = Button(self.button_frame, text="Save Text", padx=5, pady=5, command=self.save_msg)
-        self.save_button.grid(row=0, column=2)
-
-        self.show_messages_button = Button(self.button_frame, text="Show My Messages", padx=5, pady=5, command=self.show_all_messages)
-        self.show_messages_button.grid(row=0, column=4)
-
-        self.logout_button = Button(self.button_frame, text="Logout", padx=5, pady=5, command=self.log)
-        self.logout_button.grid(row=0, column=6, )
 
     def show_all_messages(self):
         with sqlite3.connect('userdata.db') as db:
@@ -115,7 +104,6 @@ class main():
         print_records = ''
         for record in records:
             print_records += str(record[0]) + "\n"
-
         self.sql_label = Label(root, text=print_records)
         self.sql_label.pack(pady=40)
 
@@ -146,11 +134,8 @@ class main():
         self.logf.pack()
 
     def cr(self):
-        # self.n_username.set('')
-        # self.n_password.set('')
         self.logf.pack_forget()
         self.head['text'] = " Create New Account "
-        # the pack() method declares the position of widgets in relation to each other.
         self.crf.pack()
 
 
